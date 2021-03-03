@@ -13,7 +13,7 @@
 __author__ = 'air'
 
 
-def permutation(array: list, position: int=0, end: int=100) -> None:
+def permutation(array: list, position: int = 0, end: int = 100) -> None:
     """
     普通递归实现全排列, 基于交换
     :param array: 需要全排列的列表
@@ -32,7 +32,7 @@ def permutation(array: list, position: int=0, end: int=100) -> None:
             array[index], array[position] = array[position], array[index]
 
 
-def dfs_permutation(array: list, position: int=0) -> None:
+def dfs_permutation(array: list, position: int = 0) -> None:
     """
     深度优先搜索实现全排列
     :param array: 需要全排列的列表
