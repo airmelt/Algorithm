@@ -42,7 +42,11 @@ class Edge:
         return other.weight > self.weight
 
     def __str__(self):
-        return str(self.v) + " - " + str(self.w) + " " + str(self.weight)
+        """
+        自定义格式化函数
+        :return:
+        """
+        return f'{self.v} - {self.w} {self.weight}'
 
 
 class EdgeWeightedGraph:
