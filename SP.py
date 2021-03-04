@@ -130,18 +130,31 @@ class Graph:
         change = False
 
         def has_negative_cycle() -> bool:
+            """
+            查找是否有负环
+            :return: 是否有负环
+            """
             for edge in self.edges:
                 if distances[edge[0]] != float('inf') and distances[edge[1]] + edge[2] < distances[edge[0]]:
                     return True
             return False
 
         def find_negative_cycle() -> List[int]:
+            """
+            找到一个负环
+            :return: 负环上的节点
+            """
             visited = [False] * self.V
             now = [False] * self.V
             edge_to = [-1] * self.V
             cycle = []
 
             def dfs(cur: int) -> None:
+                """
+                深度优先遍历图
+                :param cur: 当前节点
+                :return:
+                """
                 now[cur] = True
                 visited[cur] = True
                 for nei, _ in self.graph[cur].items():
