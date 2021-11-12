@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-@description: 查分数组/Array of Difference
+@description: 差分数组/Array of Difference
 @file_name: Diff.py
 @project: Algorithm
 @version: 1.0
