@@ -20,7 +20,8 @@ class BIT:
         self.n = n
         self.tree = [0] * (n + 1)
 
-    def lowbit(self, x: int) -> int:
+    @staticmethod
+    def lowbit(x: int) -> int:
         """
         得到一个数的最低位对应的 2的幂
         如 2(0b10) -> 2, 7(0b111) -> 1
