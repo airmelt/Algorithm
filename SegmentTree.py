@@ -10,7 +10,99 @@
 @author: airmelt
 """
 
-from typing import Callable, Any
+from typing import Callable, Any, List
+
+
+class SegmentTree:
+    def __init__(self, data: List[Any], merge: Callable = max) -> None:
+        """
+        
+        :param data: 初始化数据
+        :param merge: 合并函数
+        """
+        self.data = data
+        self.n = len(data)
+        self.tree = [None] * (self.n << 2)
+        self._merge = merge
+        if self.n:
+            self._build(0, 0, self.n - 1)
+
+    def query(self, ql: int, qr: int) -> Any:
+        """
+        
+        :param ql: 查询左区间
+        :param qr: 查询右区间
+        :return: 返回查询的结果
+        """
+        return self._query(0, 0, self.n - 1, ql, qr)
+
+    def update(self, index: int, value: Any) -> None:
+        """
+        
+        :param index: 需要修改的数组的下标
+        :param value: 修改后的值
+        :return:
+        """
+        self.data[index] = value
+        self._update(0, 0, self.n - 1, index)
+
+    def _build(self, tree_index: int, left: int, right: int) -> None:
+        """
+        
+        :param tree_index: 对应的数组的下标
+        :param left: 左边界
+        :param right: 右边界
+        :return:
+        """
+        if left == right:
+            self.tree[tree_index] = self.data[left]
+            return
+        mid = left + ((right - left) >> 1)
+        left_index, right_index = (tree_index << 1) + 1, (tree_index << 1) + 2
+        self._build(left_index, left, mid)
+        self._build(right_index, mid + 1, right)
+        self.tree[tree_index] = self._merge(self.tree[left_index], self.tree[right_index])
+
+    def _query(self, tree_index: int, left: int, right: int, ql: int, qr: int) -> Any:
+        """
+        
+        :param tree_index: 查询对应的下标
+        :param left: 有效数据数组的左边界
+        :param right: 有效数据数组的右边界
+        :param ql: 查询的左边界
+        :param qr: 查询的右边界
+        :return: 返回查询的结果
+        """
+        if left == ql and right == qr:
+            return self.tree[tree_index]
+        mid = left + ((right - left) >> 1)
+        left_index, right_index = (tree_index << 1) + 1, (tree_index << 1) + 2
+        if qr <= mid:
+            return self._query(left_index, left, mid, ql, qr)
+        elif ql > mid:
+            return self._query(right_index, mid + 1, right, ql, qr)
+        return self._merge(self._query(left_index, left, mid, ql, mid),
+                           self._query(right_index, mid + 1, right, mid + 1, qr))
+
+    def _update(self, tree_index: int, left: int, right: int, index: int) -> None:
+        """
+        
+        :param tree_index: 查询对应的下标
+        :param left: 有效数据数组的左边界
+        :param right: 有效数据数组的右边界
+        :param index: 修改后的值
+        :return:
+        """
+        if left == right == index:
+            self.tree[tree_index] = self.data[index]
+            return
+        mid = left + ((right - left) >> 1)
+        left_index, right_index = (tree_index << 1) + 1, (tree_index << 1) + 2
+        if index > mid:
+            self._update(right_index, mid + 1, right, index)
+        else:
+            self._update(left_index, left, mid, index)
+        self.tree[tree_index] = self._merge(self.tree[left_index], self.tree[right_index])
 
 
 class STNode:
@@ -31,7 +123,7 @@ class STNode:
         return f'({self.l} ~ {self.r} : {self.value})'
 
 
-class SegmentTree:
+class LazySegmentTree:
     def __init__(self, fr: int, to: int, when_reach_leaf: Callable[[int], Any],
                  collect: Callable[[Any, Any], Any], lazy_update: Callable[[STNode, Any], None] = None) -> None:
         """
